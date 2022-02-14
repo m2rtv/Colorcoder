@@ -3,7 +3,15 @@
     import Board from './components/board.svelte'
     import About from './components/about.svelte'
     import Scoreboard from './components/scoreboard.svelte'
+    import {codeSlotData} from './stores/codeSlotData.js'
 
+    console.log($codeSlotData);
+
+    // Setup
+    let rows = 8;
+    let cols = 4;
+
+    // Modal functionality
     let aboutModal = false;
     let scoreModal = false;
     const toggleAboutModal = () => {
@@ -12,6 +20,17 @@
     const toggleScoreModal = () => {
         scoreModal = !scoreModal;
     }
+
+    // Shuffle all the values and return 4 unique cases
+    function shuffleArray(poop) {
+        poop.sort(() => Math.random() - 0.5);
+    }
+    // Answer variable ⬇️
+    let poop = [1, 2, 3, 4, 5, 6];
+    shuffleArray(poop);
+    poop.splice(0, 2);
+    console.log(poop);
+    
 </script>
 
 <About aboutModal={aboutModal} on:click={toggleAboutModal}/>
@@ -48,8 +67,17 @@
     </div>
 </header>
 
+<!-- {#each $codeSlotData as codeSlot}
+    <p class="text-white" 
+    class:text-neutral-500={!codeSlot.activeRow}>
+    {codeSlot.id}
+    </p>
+{/each} -->
+
 <Board>
 
 </Board>
 
-<Button>Submit</Button>
+<div class="w-screen fixed bottom-7 mx-auto">
+    <Button>Submit</Button>
+</div>

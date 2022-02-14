@@ -1,17 +1,19 @@
 <script>
-    import CodeHole from './codeHole.svelte'
-    import KeyHoles from './keyHoles.svelte'
+    import CodeSlot from './codeSlot.svelte'
+    import HintSlots from './hintSlots.svelte'
 
     let boardSize = 4;
+    let guesses = 8;
 </script>
 
-<!-- Board wrapper -->
-<div class="max-w-md mx-auto mt-[33vh] px-4">
-    <!-- Row -->
-    <div class="grid grid-flow-col gap-1.5">
-        <KeyHoles/>
-        {#each {length: boardSize} as _, i}
-            <CodeHole/>
-        {/each}
-    </div>
+<div class="max-w-md mx-auto mt-[40vh] px-4">
+    {#each {length: guesses} as _, i}
+        <!-- Row -->
+        <div class="grid grid-flow-col auto-cols-fr gap-1.5 mb-1.5">
+            <HintSlots/>
+            {#each {length: boardSize} as _, i}
+                <CodeSlot/>
+            {/each}
+        </div>
+    {/each}
 </div>
