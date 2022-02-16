@@ -1,40 +1,168 @@
 <script>
     import Button from './components/button.svelte'
-    import Board from './components/board.svelte'
     import About from './components/about.svelte'
     import Scoreboard from './components/scoreboard.svelte'
-    import {codeSlotData} from './stores/codeSlotData.js'
+    import Won from './components/won.svelte'
+    import Lost from './components/lost.svelte'
 
-    console.log($codeSlotData);
-
-    // Setup
-    let rows = 8;
-    let cols = 4;
-
-    // Modal functionality
+    // Modals
     let aboutModal = false;
     let scoreModal = false;
+    let wonModal = false;
+    let lostModal = false;
     const toggleAboutModal = () => {
         aboutModal = !aboutModal;
     }
     const toggleScoreModal = () => {
         scoreModal = !scoreModal;
     }
+    const toggleWonModal = () => {
+        wonModal = !wonModal;
+    }
+    const toggleLostModal = () => {
+        lostModal = !lostModal;
+    }
 
     // Shuffle all the values and return 4 unique cases
     function shuffleArray(poop) {
         poop.sort(() => Math.random() - 0.5);
     }
-    // Answer variable ⬇️
+    // Final answer variable ⬇️
     let poop = [1, 2, 3, 4, 5, 6];
     shuffleArray(poop);
     poop.splice(0, 2);
-    console.log(poop);
-    
+    console.log('Answer is: ' + poop);
+
+    // Setup
+    let rows = 8;
+    let cols = 4;
+
+    let activeGroup = 0;
+
+    // Guess slot styles
+    let colArr = [
+        'border border-dashed border-neutral-300 dark:border-neutral-600', 
+        'bg-red-500', 
+        'bg-yellow-500', 
+        'bg-green-500', 
+        'bg-sky-500', 
+        'bg-purple-500', 
+        'bg-slate-500'
+    ];
+
+    // Save all the board items
+    function item(id, group, answer, color) {
+        this.id = id;
+        this.group = group;
+        this.answer = answer;
+        this.color = colArr[answer];
+    }
+
+    // Guess slots
+    let guesses = []
+    let myItem;
+    let id = 0;
+    for (let y=0; y<rows; y++) {
+        guesses.push([]);
+        for (let x=0; x<cols; x++) {
+            myItem = new item(id, y, 0);
+            guesses[y].push(myItem);
+            id+=1;
+        }
+    }
+
+    // Hint item styles
+    let hintStyle = [
+        'border border-neutral-300 dark:border-neutral-600', 
+        'border border-neutral-300 dark:border-neutral-300', 
+        'bg-neutral-300'
+    ];
+
+    // Save all the hint items
+    function hintItem(hint, style) {
+        this.hint = hint;
+        this.style = hintStyle[hint];
+    }
+
+    // Hint slots
+    let hints = []
+    let hintItems;
+    for (let y=0; y<rows; y++) {
+        hints.push([]);
+        for (let x=0; x<cols; x++) {
+            hintItems = new hintItem(0);
+            hints[y].push(hintItems);
+        }
+    }
+
+    // Button
+    function submit() {
+        hints=hints;
+        // First check if all the slots are filled
+        if (guesses[activeGroup][0].answer !== 0 && guesses[activeGroup][1].answer !== 0 && guesses[activeGroup][2].answer !== 0 && guesses[activeGroup][3].answer !== 0) {
+            // Check all the answers and give hints
+            for (let i=0; i<cols; i++) {
+                let currentAnswer = guesses[activeGroup][i].answer
+                // Check if the given answer is the same, and on the same slot
+                if (currentAnswer === poop[i]) {
+                    hints[activeGroup][i].hint = 2;
+                    hints[activeGroup][i].style = hintStyle[2];
+                } 
+                // Else if - correct color, but in the wrong position
+                else if (currentAnswer === poop[0] || currentAnswer === poop[1] || currentAnswer === poop[2] || currentAnswer === poop[3]) {
+                    hints[activeGroup][i].hint = 1;
+                    hints[activeGroup][i].style = hintStyle[1];
+                } 
+                // The color does not exist
+                else {
+                    hints[activeGroup][i].hint = 0;
+                }
+            }
+            // Check if we have a winning combo and show modal if true
+            if (hints[activeGroup][0].hint == 2 && hints[activeGroup][1].hint == 2 && hints[activeGroup][2].hint == 2 && hints[activeGroup][3].hint == 2) {
+                wonModal = true;
+                activeGroup = rows+1;
+            } else if (activeGroup == rows-1) {
+                lostModal = true;
+                activeGroup+=1;
+            } else {
+                // Make the next line editable
+                activeGroup+=1;
+            }
+            
+        } else {
+            alert('PLEASE FILL OUT ALL THE SLOTS')
+        }
+    }
+
+    // Check if clicked element belongs to an active group and update answer and color
+    function toggleAnswer(item) {
+        if (item.group === activeGroup) {
+            if (item.answer === 6) {
+                item.answer = 1;
+                item.color = colArr[item.answer]
+            } else {
+                item.answer+=1;
+                item.color = colArr[item.answer]
+            }
+        }
+        // Update data
+        guesses=guesses;
+    }
+
+    // Enter keyboard event to submit
+    function onKeyDown(e) {
+        if (e.keyCode === 13) {
+            submit();
+        }
+    }
+
 </script>
 
-<About aboutModal={aboutModal} on:click={toggleAboutModal}/>
-<Scoreboard scoreModal={scoreModal} on:click={toggleScoreModal}/>
+<About aboutModal={aboutModal} on:click={toggleAboutModal} />
+<Scoreboard scoreModal={scoreModal} on:click={toggleScoreModal} />
+<Won wonModal={wonModal} on:click={toggleWonModal} />
+<Lost lostModal={lostModal} on:click={toggleLostModal} />
 
 <header>
     <div class="flex">
@@ -67,17 +195,61 @@
     </div>
 </header>
 
-<!-- {#each $codeSlotData as codeSlot}
-    <p class="text-white" 
-    class:text-neutral-500={!codeSlot.activeRow}>
-    {codeSlot.id}
-    </p>
-{/each} -->
-
-<Board>
-
-</Board>
+<div class="max-w-md mx-auto mt-[40vh] px-4 text-xs text-neutral-400 select-none">
+    {#each guesses as group, i}
+        <div class="grid grid-flow-col auto-cols-fr gap-1.5 mb-1.5">
+            <div class="flex items-center">
+                {#each hints[i] as hint, j}
+                    <div class="w-3 h-3 rounded-full mr-1 {hint.style}"></div>
+                {/each}
+            </div>
+            {#each group as item}
+                {#if item.group === activeGroup}
+                    <div id="aspect-ratio-11" class="border border-neutral-300 rounded-lg flex justify-center items-center dark:border-neutral-300 cursor-pointer" on:click={ () => toggleAnswer(item) }>
+                        <div class="w-10 h-10 flex justify-center items-center {item.color} rounded-full text-white">
+                            <!-- {item.answer} -->
+                        </div>
+                    </div>
+                {:else}
+                    <div id="aspect-ratio-11" class="border border-neutral-300 rounded-lg flex justify-center items-center dark:border-neutral-600" on:click={ () => toggleAnswer(item) }>
+                        <div class="w-10 h-10 flex justify-center items-center {item.color} rounded-full text-white">
+                            <!-- {item.answer} -->
+                        </div>
+                    </div>
+                {/if}
+            {/each}
+        </div>
+    {/each}
+</div>
+<div class="mb-28"></div>
 
 <div class="w-screen fixed bottom-7 mx-auto">
-    <Button>Submit</Button>
+    <Button on:click={submit}>Submit</Button>
 </div>
+
+<!-- Submit on enter -->
+<svelte:window on:keydown={onKeyDown} />
+
+<style>
+
+    * {
+        touch-action: manipulation;
+    }
+
+    #aspect-ratio-11 {
+        aspect-ratio: 1 / 1;
+    }
+    @supports not (aspect-ratio: 1 / 1) {
+        #aspect-ratio-11::before {
+            float: left;
+            padding-top: 100%;
+            content: "";
+        }
+
+        #aspect-ratio-11::after {
+            display: block;
+            content: "";
+            clear: both;
+        }
+    }
+</style>
