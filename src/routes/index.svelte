@@ -4,12 +4,14 @@
     import Scoreboard from './components/scoreboard.svelte'
     import Won from './components/won.svelte'
     import Lost from './components/lost.svelte'
+    import Alert from './components/alert.svelte'
 
     // Modals
     let aboutModal = false;
     let scoreModal = false;
     let wonModal = false;
     let lostModal = false;
+    let alertVisible = false;
     const toggleAboutModal = () => {
         aboutModal = !aboutModal;
     }
@@ -131,7 +133,10 @@
             }
             
         } else {
-            alert('PLEASE FILL OUT ALL THE SLOTS')
+            console.log('PLEASE FILL OUT ALL THE SLOTS')
+            alertVisible = true;
+            setTimeout((hideAlert), 3000)
+            function hideAlert() { alertVisible = false }
         }
     }
 
@@ -163,6 +168,7 @@
 <Scoreboard scoreModal={scoreModal} on:click={toggleScoreModal} />
 <Won wonModal={wonModal} on:click={toggleWonModal} />
 <Lost lostModal={lostModal} on:click={toggleLostModal} />
+<Alert alertVisible={alertVisible} message="Please fill in all the items in the row" />
 
 <header>
     <div class="flex">
