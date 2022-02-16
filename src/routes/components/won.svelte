@@ -1,9 +1,10 @@
 <script>
+    import { fly } from 'svelte/transition';
     export let wonModal = true;
 </script>
 
 {#if wonModal}
-<div class="w-screen h-screen flex justify-center bg-white bg-opacity-90 dark:bg-neutral-900 dark:bg-opacity-90 fixed z-10" on:click>
+<div class="w-screen h-screen flex justify-center bg-white bg-opacity-90 dark:bg-neutral-900 dark:bg-opacity-90 fixed z-10" on:click in:fly="{{y: 64, duration:400}}" out:fly="{{y: -64, duration:400}}">
     <div class="max-w-md h-max mx-4 mt-[74px] p-8 bg-neutral-100 dark:bg-neutral-800 rounded-xl z-20">
         <h1 class="text-2xl text-center font-medium mb-4">Congrats!</h1>
         <p class="text-neutral-600 dark:text-neutral-200">U da man. All the colors be belonging to you.</p>
