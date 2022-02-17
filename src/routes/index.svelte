@@ -168,7 +168,7 @@
 <Scoreboard scoreModal={scoreModal} on:click={toggleScoreModal} />
 <Won wonModal={wonModal} on:click={toggleWonModal} />
 <Lost lostModal={lostModal} on:click={toggleLostModal} />
-<Alert alertVisible={alertVisible} message="Please fill in all the items in the row" />
+<Alert alertVisible={alertVisible} message="Please fill in all the items in the row" on:click={alertVisible = !alertVisible}/>
 
 <header>
     <div class="flex">
@@ -179,7 +179,7 @@
         <div class="h-2 flex-1 bg-purple-500"></div>
         <div class="h-2 flex-1 bg-slate-500"></div>
     </div>
-    <div class="flex justify-between items-center p-4 max-w-md mx-auto">
+    <div class="flex justify-between items-center p-4 max-w-md mx-auto bg-neutral-800">
         <h1 class="text-2xl font-medium tracking-tight">Mastermind</h1>
         <nav class="flex">
             <div class="ml-3 cursor-pointer" on:click={toggleAboutModal}>
