@@ -99,27 +99,28 @@
 
     // Button
     function submit() {
-        hints=hints;
         // First check if all the slots are filled
         if (guesses[activeGroup][0].answer !== 0 && guesses[activeGroup][1].answer !== 0 && guesses[activeGroup][2].answer !== 0 && guesses[activeGroup][3].answer !== 0) {
+            let hintArray = [];
             // Check all the answers and give hints
             for (let i=0; i<cols; i++) {
                 let currentAnswer = guesses[activeGroup][i].answer
                 // Check if the given answer is the same, and on the same slot
                 if (currentAnswer === poop[i]) {
-                    hints[activeGroup][i].hint = 2;
-                    hints[activeGroup][i].style = hintStyle[2];
+                    hintArray.push(2)
                 } 
                 // Else if - correct color, but in the wrong position
                 else if (currentAnswer === poop[0] || currentAnswer === poop[1] || currentAnswer === poop[2] || currentAnswer === poop[3]) {
-                    hints[activeGroup][i].hint = 1;
-                    hints[activeGroup][i].style = hintStyle[1];
-                } 
-                // The color does not exist
-                else {
-                    hints[activeGroup][i].hint = 0;
+                    hintArray.push(1)
                 }
             }
+            hintArray.sort();
+            hintArray.reverse();
+            for (let i=0; i<hintArray.length; i++) {
+                hints[activeGroup][i].hint = hintArray[i];
+                hints[activeGroup][i].style = hintStyle[hintArray[i]];
+            }
+            
             // Check if we have a winning combo and show modal if true
             if (hints[activeGroup][0].hint == 2 && hints[activeGroup][1].hint == 2 && hints[activeGroup][2].hint == 2 && hints[activeGroup][3].hint == 2) {
                 wonModal = true;
@@ -155,7 +156,7 @@
         guesses=guesses;
     }
 
-    // Enter keyboard event to submit
+    // Keyboard event for 'Enter' to Submit
     function onKeyDown(e) {
         if (e.keyCode === 13) {
             submit();
@@ -168,7 +169,7 @@
 <Scoreboard scoreModal={scoreModal} on:click={toggleScoreModal} />
 <Won wonModal={wonModal} on:click={toggleWonModal} />
 <Lost lostModal={lostModal} on:click={toggleLostModal} />
-<Alert alertVisible={alertVisible} message="Please fill in all the items in the row" on:click={alertVisible = !alertVisible}/>
+<Alert alertVisible={alertVisible} message="Please fill in all the items in the row"/>
 
 <header>
     <div class="flex">
@@ -218,9 +219,9 @@
                     </div>
                 {:else}
                     <div id="aspect-ratio-11" class="border border-neutral-300 rounded-lg flex justify-center items-center dark:border-neutral-600" on:click={ () => toggleAnswer(item) }>
-                        <div class="w-10 h-10 flex justify-center items-center {item.color} rounded-full text-white">
+                        <button class="w-10 h-10 flex justify-center items-center {item.color} rounded-full text-white">
                             <!-- {item.answer} -->
-                        </div>
+                        </button>
                     </div>
                 {/if}
             {/each}
