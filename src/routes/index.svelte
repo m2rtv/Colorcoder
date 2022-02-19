@@ -25,19 +25,17 @@
         lostModal = !lostModal;
     }
 
-    // Shuffle all the values and return 4 unique cases
-    function shuffleArray(poop) {
-        poop.sort(() => Math.random() - 0.5);
-    }
     // Final answer variable ⬇️
-    let poop = [1, 2, 3, 4, 5, 6];
-    shuffleArray(poop);
-    poop.splice(0, 2);
+    let arr = [1, 2, 3, 4, 5, 6];
+    let poop = [];
+    for (let i=0; i<5; i++) {
+        poop.push( arr[Math.floor(Math.random()*arr.length)] );
+    }
     console.log('Answer is: ' + poop);
 
     // Setup
-    let rows = 8;
-    let cols = 4;
+    let rows = 6;
+    let cols = 5;
 
     let activeGroup = 0;
 
@@ -99,30 +97,29 @@
 
     // Button
     function submit() {
+        hints=hints;
         // First check if all the slots are filled
-        if (guesses[activeGroup][0].answer !== 0 && guesses[activeGroup][1].answer !== 0 && guesses[activeGroup][2].answer !== 0 && guesses[activeGroup][3].answer !== 0) {
-            let hintArray = [];
+        if (guesses[activeGroup][0].answer !== 0 && guesses[activeGroup][1].answer !== 0 && guesses[activeGroup][2].answer !== 0 && guesses[activeGroup][3].answer !== 0 && guesses[activeGroup][4].answer !== 0) {
             // Check all the answers and give hints
             for (let i=0; i<cols; i++) {
                 let currentAnswer = guesses[activeGroup][i].answer
                 // Check if the given answer is the same, and on the same slot
                 if (currentAnswer === poop[i]) {
-                    hintArray.push(2)
+                    hints[activeGroup][i].hint = 2;
+                    hints[activeGroup][i].style = hintStyle[2];
                 } 
                 // Else if - correct color, but in the wrong position
-                else if (currentAnswer === poop[0] || currentAnswer === poop[1] || currentAnswer === poop[2] || currentAnswer === poop[3]) {
-                    hintArray.push(1)
+                else if (currentAnswer === poop[0] || currentAnswer === poop[1] || currentAnswer === poop[2] || currentAnswer === poop[3] || currentAnswer === poop[4]) {
+                    hints[activeGroup][i].hint = 1;
+                    hints[activeGroup][i].style = hintStyle[1];
+                } 
+                // The color does not exist
+                else {
+                    hints[activeGroup][i].hint = 0;
                 }
             }
-            hintArray.sort();
-            hintArray.reverse();
-            for (let i=0; i<hintArray.length; i++) {
-                hints[activeGroup][i].hint = hintArray[i];
-                hints[activeGroup][i].style = hintStyle[hintArray[i]];
-            }
-            
             // Check if we have a winning combo and show modal if true
-            if (hints[activeGroup][0].hint == 2 && hints[activeGroup][1].hint == 2 && hints[activeGroup][2].hint == 2 && hints[activeGroup][3].hint == 2) {
+            if (hints[activeGroup][0].hint == 2 && hints[activeGroup][1].hint == 2 && hints[activeGroup][2].hint == 2 && hints[activeGroup][3].hint == 2 && hints[activeGroup][4].hint == 2) {
                 wonModal = true;
                 activeGroup = rows+1;
             } else if (activeGroup == rows-1) {
@@ -205,9 +202,9 @@
 <div class="max-w-md mx-auto mt-[40vh] px-4 text-xs text-neutral-400 select-none">
     {#each guesses as group, i}
         <div class="grid grid-flow-col auto-cols-fr gap-1.5 mb-1.5">
-            <div class="flex items-center">
+            <div class="flex items-center gap-1">
                 {#each hints[i] as hint, j}
-                    <div class="w-3 h-3 rounded-full mr-1 {hint.style}"></div>
+                    <div id="aspect-ratio-11" class="flex-grow rounded-full {hint.style}"></div>
                 {/each}
             </div>
             {#each group as item}
