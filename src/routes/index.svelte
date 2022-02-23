@@ -210,13 +210,13 @@
             {#each group as item}
                 {#if item.group === activeGroup}
                     <div id="aspect-ratio-11" class="border border-neutral-800 rounded-lg flex justify-center items-center dark:border-neutral-300 cursor-pointer" on:click={ () => toggleAnswer(item) }>
-                        <div class="w-10 h-10 flex justify-center items-center {item.color} rounded-full text-white">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 flex justify-center items-center {item.color} rounded-full text-white">
                             <!-- {item.answer} -->
                         </div>
                     </div>
                 {:else}
                     <div id="aspect-ratio-11" class="border border-neutral-300 rounded-lg flex justify-center items-center dark:border-neutral-600" on:click={ () => toggleAnswer(item) }>
-                        <button class="w-10 h-10 flex justify-center items-center {item.color} rounded-full text-white">
+                        <button class="w-8 h-8 sm:w-10 sm:h-10 flex justify-center items-center {item.color} rounded-full text-white">
                             <!-- {item.answer} -->
                         </button>
                     </div>
