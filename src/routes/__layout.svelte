@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-    <title>Mastermind</title>
+    <title>Colorcoder</title>
 </svelte:head>
 
 <main>

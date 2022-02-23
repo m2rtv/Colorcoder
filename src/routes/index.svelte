@@ -74,8 +74,8 @@
     // Hint item styles
     let hintStyle = [
         'border border-neutral-300 dark:border-neutral-600', 
-        'border border-neutral-300 dark:border-neutral-300', 
-        'bg-neutral-300'
+        'border border-neutral-800 dark:border-neutral-300', 
+        'border border-neutral-800 dark:border-neutral-300 bg-neutral-800 dark:bg-neutral-300'
     ];
 
     // Save all the hint items
@@ -177,24 +177,24 @@
         <div class="h-2 flex-1 bg-purple-500"></div>
         <div class="h-2 flex-1 bg-slate-500"></div>
     </div>
-    <div class="flex justify-between items-center p-4 max-w-md mx-auto bg-neutral-800">
-        <h1 class="text-2xl font-medium tracking-tight">Mastermind</h1>
+    <div class="flex justify-between items-center p-4 max-w-md mx-auto">
+        <h1 class="text-2xl font-medium tracking-normal">Colorcoder</h1>
         <nav class="flex">
             <div class="ml-3 cursor-pointer" on:click={toggleAboutModal}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-neutral-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </div>
-            <div class="ml-3 cursor-pointer" on:click={toggleScoreModal}>
+            <!-- <div class="ml-3 cursor-pointer" on:click={toggleScoreModal}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-neutral-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
-            </div>
-            <div class="ml-3 cursor-pointer">
+            </div> -->
+            <!-- <div class="ml-3 cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-neutral-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
-            </div>
+            </div> -->
         </nav>
     </div>
 </header>
@@ -209,7 +209,7 @@
             </div>
             {#each group as item}
                 {#if item.group === activeGroup}
-                    <div id="aspect-ratio-11" class="border border-neutral-300 rounded-lg flex justify-center items-center dark:border-neutral-300 cursor-pointer" on:click={ () => toggleAnswer(item) }>
+                    <div id="aspect-ratio-11" class="border border-neutral-800 rounded-lg flex justify-center items-center dark:border-neutral-300 cursor-pointer" on:click={ () => toggleAnswer(item) }>
                         <div class="w-10 h-10 flex justify-center items-center {item.color} rounded-full text-white">
                             <!-- {item.answer} -->
                         </div>
@@ -228,7 +228,7 @@
 <div class="mb-28"></div>
 
 <div class="w-screen fixed bottom-7 mx-auto">
-    <Button on:click={submit}>Submit</Button>
+    <Button on:click={submit}>Enter</Button>
 </div>
 
 <!-- Submit on enter -->
